@@ -1,0 +1,90 @@
+# Interlevel POC - Git Ignore
+
+# Environment variables
+.env
+*.env
+!.env.example
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Runtime data
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Generated agents (runtime artifacts)
+agents/generated/*
+!agents/generated/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Local configuration overrides
+config/local.py
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+test_setup.txt
+
+# Logs
+logs/
+*.log
+
+# Requirements tracking (optional - uncomment if you want to ignore)
+# requirements/local.txt
