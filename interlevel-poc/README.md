@@ -1,34 +1,28 @@
 # Interlevel POC - Local Development
-# Onetime scripts/setup.sh for MAC and scripts/setup.bat for windows 
 
 ## Quick Start
 
 1. Activate virtual environment:
    ```bash
-   source venv/bin/activate  # Mac/Linux
+   venv\Scripts\activate  # Windows
    ```
 
-2. Install Ollama (if not already installed):
-   ```bash
-   # Mac
-   brew install ollama
-
-   # Linux
-   curl -fsSL https://ollama.ai/install.sh | sh
-   ```
+2. Install Ollama:
+   - Download from: https://ollama.ai/download
+   - Or use WSL: curl -fsSL https://ollama.ai/install.sh | sh
 
 3. Start Ollama and pull model:
    ```bash
    # Terminal 1: Start Ollama server
    ollama serve
-
+ECHO is off.
    # Terminal 2: Pull model
    ollama pull codellama
    ```
 
 4. Initialize database:
    ```bash
-   python ../scripts/init_db.py
+   python ..\scripts\init_db.py
    ```
 
 5. Run tests:
@@ -37,8 +31,8 @@
    ```
 
 6. Start development:
-   - See [../poc_readme.md](../poc_readme.md) for full documentation
-   - See [../Implementation_Tasks.md](../Implementation_Tasks.md) for task list
+   - See [..\poc_readme.md](..\poc_readme.md) for full documentation
+   - See [..\Implementation_Tasks.md](..\Implementation_Tasks.md) for task list
 
 ## Project Structure
 
@@ -64,7 +58,7 @@ interlevel-poc/
 
 ## Development Workflow
 
-1. Activate environment: `source venv/bin/activate`
+1. Activate environment: `venv\Scripts\activate`
 2. Make changes
 3. Run tests: `pytest tests/`
 4. Format code: `black src/ tests/`
@@ -72,14 +66,14 @@ interlevel-poc/
 
 ## Documentation
 
-- [POC README](../poc_readme.md) - Quick start guide
-- [Implementation Tasks](../Implementation_Tasks.md) - Detailed task list
-- [POC Plan](../POC_Local_Plan.md) - Full POC plan
-- [Architecture Plan](../Architecture_Plan.md) - Production architecture
-- [Architecture Rules](../Architecture_Rules.md) - Implementation rules
+- [POC README](..\poc_readme.md) - Quick start guide
+- [Implementation Tasks](..\Implementation_Tasks.md) - Detailed task list
+- [POC Plan](..\POC_Local_Plan.md) - Full POC plan
+- [Architecture Plan](..\Architecture_Plan.md) - Production architecture
+- [Architecture Rules](..\Architecture_Rules.md) - Implementation rules
 
 ## Next Steps
 
-See [../Implementation_Tasks.md](../Implementation_Tasks.md) for detailed tasks.
+See [..\Implementation_Tasks.md](..\Implementation_Tasks.md) for detailed tasks.
 
 Start with Phase 1: Foundation
