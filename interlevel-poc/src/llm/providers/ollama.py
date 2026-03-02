@@ -41,7 +41,9 @@ class OllamaProvider(BaseLLMProvider):
                 f"Is the server running? Start with: ollama serve"
             )
 
-    def generate(self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7) -> str:
+    def generate(
+        self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7
+    ) -> str:
         """Generate text using Ollama"""
         url = f"{self.host}/api/generate"
 
@@ -49,10 +51,7 @@ class OllamaProvider(BaseLLMProvider):
             "model": self.model,
             "prompt": prompt,
             "stream": False,
-            "options": {
-                "temperature": temperature,
-                "num_predict": max_tokens
-            }
+            "options": {"temperature": temperature, "num_predict": max_tokens},
         }
 
         try:
@@ -67,7 +66,12 @@ class OllamaProvider(BaseLLMProvider):
             logger.error(f"Ollama request failed: {e}")
             raise
 
-    def chat(self, messages: List[Dict[str, str]], max_tokens: int = 1000, temperature: float = 0.7) -> str:
+    def chat(
+        self,
+        messages: List[Dict[str, str]],
+        max_tokens: int = 1000,
+        temperature: float = 0.7,
+    ) -> str:
         """Chat using Ollama"""
         url = f"{self.host}/api/chat"
 
@@ -75,10 +79,7 @@ class OllamaProvider(BaseLLMProvider):
             "model": self.model,
             "messages": messages,
             "stream": False,
-            "options": {
-                "temperature": temperature,
-                "num_predict": max_tokens
-            }
+            "options": {"temperature": temperature, "num_predict": max_tokens},
         }
 
         try:

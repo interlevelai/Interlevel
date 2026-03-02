@@ -59,13 +59,17 @@ class StructuredLogger:
         self.logger.info(json.dumps(self._build_log_entry("INFO", message, **kwargs)))
 
     def warning(self, message: str, **kwargs):
-        self.logger.warning(json.dumps(self._build_log_entry("WARNING", message, **kwargs)))
+        self.logger.warning(
+            json.dumps(self._build_log_entry("WARNING", message, **kwargs))
+        )
 
     def error(self, message: str, **kwargs):
         self.logger.error(json.dumps(self._build_log_entry("ERROR", message, **kwargs)))
 
     def critical(self, message: str, **kwargs):
-        self.logger.critical(json.dumps(self._build_log_entry("CRITICAL", message, **kwargs)))
+        self.logger.critical(
+            json.dumps(self._build_log_entry("CRITICAL", message, **kwargs))
+        )
 
 
 class JsonFormatter(logging.Formatter):
@@ -73,7 +77,7 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record):
         # If message is already JSON, return as-is
-        if record.getMessage().startswith('{'):
+        if record.getMessage().startswith("{"):
             return record.getMessage()
 
         # Otherwise, wrap in JSON

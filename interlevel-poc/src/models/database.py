@@ -3,7 +3,16 @@ Database models and setup for Interlevel POC
 Uses SQLAlchemy ORM with SQLite
 """
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, Text, ForeignKey, JSON
+from sqlalchemy import (
+    create_engine,
+    Column,
+    String,
+    Integer,
+    DateTime,
+    Text,
+    ForeignKey,
+    JSON,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 import sys
@@ -20,6 +29,7 @@ Base = declarative_base()
 
 class User(Base):
     """User model"""
+
     __tablename__ = "users"
 
     user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -29,7 +39,9 @@ class User(Base):
 
     # Relationships
     agents = relationship("Agent", back_populates="user", cascade="all, delete-orphan")
-    sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
+    sessions = relationship(
+        "Session", back_populates="user", cascade="all, delete-orphan"
+    )
     executions = relationship("Execution", back_populates="user")
 
     def __repr__(self):
@@ -38,6 +50,7 @@ class User(Base):
 
 class Agent(Base):
     """Agent model"""
+
     __tablename__ = "agents"
 
     agent_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -46,7 +59,9 @@ class Agent(Base):
     description = Column(Text)
     requirements_json = Column(JSON)  # Stored as JSON
     code_path = Column(String)
-    status = Column(String, default="draft")  # draft, deployed, active, failed, archived
+    status = Column(
+        String, default="draft"
+    )  # draft, deployed, active, failed, archived
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -60,12 +75,15 @@ class Agent(Base):
 
 class Execution(Base):
     """Agent execution model"""
+
     __tablename__ = "executions"
 
     execution_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     agent_id = Column(String, ForeignKey("agents.agent_id"), nullable=False)
     user_id = Column(String, ForeignKey("users.user_id"), nullable=False)
-    status = Column(String, default="pending")  # pending, running, success, failed, timeout
+    status = Column(
+        String, default="pending"
+    )  # pending, running, success, failed, timeout
     tokens_used = Column(Integer, default=0)
     started_at = Column(DateTime)
     completed_at = Column(DateTime)
@@ -77,7 +95,9 @@ class Execution(Base):
     user = relationship("User", back_populates="executions")
 
     def __repr__(self):
-        return f"<Execution(execution_id='{self.execution_id}', status='{self.status}')>"
+        return (
+            f"<Execution(execution_id='{self.execution_id}', status='{self.status}')>"
+        )
 
     @property
     def duration(self):
@@ -89,6 +109,7 @@ class Execution(Base):
 
 class Session(Base):
     """Clarification session model"""
+
     __tablename__ = "sessions"
 
     session_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -96,7 +117,9 @@ class Session(Base):
     conversation_state = Column(JSON)  # Stored as JSON array of messages
     status = Column(String, default="active")  # active, complete, abandoned
     created_at = Column(DateTime, default=datetime.utcnow)
-    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(hours=24))
+    expires_at = Column(
+        DateTime, default=lambda: datetime.utcnow() + timedelta(hours=24)
+    )
 
     # Relationships
     user = relationship("User", back_populates="sessions")
@@ -114,7 +137,7 @@ class Session(Base):
 engine = create_engine(
     settings.DATABASE_URL,
     echo=settings.LOG_LEVEL == "DEBUG",
-    connect_args={"check_same_thread": False}  # Needed for SQLite
+    connect_args={"check_same_thread": False},  # Needed for SQLite
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

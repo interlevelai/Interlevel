@@ -9,6 +9,7 @@ from pydantic import BaseModel, ValidationError
 
 class ValidationResult(BaseModel):
     """Result of validation"""
+
     is_valid: bool
     errors: List[str] = []
     warnings: List[str] = []
@@ -16,14 +17,17 @@ class ValidationResult(BaseModel):
 
 # Dangerous patterns in generated code
 DANGEROUS_PATTERNS = [
-    (r'\bos\.system\(', "os.system() - command injection risk"),
-    (r'\beval\(', "eval() - arbitrary code execution"),
-    (r'\bexec\(', "exec() - arbitrary code execution"),
-    (r'\b__import__\(', "__import__() - dynamic imports"),
-    (r'subprocess\.[a-z]+\([^)]*shell\s*=\s*True', "subprocess with shell=True - command injection"),
+    (r"\bos\.system\(", "os.system() - command injection risk"),
+    (r"\beval\(", "eval() - arbitrary code execution"),
+    (r"\bexec\(", "exec() - arbitrary code execution"),
+    (r"\b__import__\(", "__import__() - dynamic imports"),
+    (
+        r"subprocess\.[a-z]+\([^)]*shell\s*=\s*True",
+        "subprocess with shell=True - command injection",
+    ),
     (r'open\([^)]*[\'"]w[\'"]', "file write operations - potential overwrite"),
-    (r'rm\s+-rf', "rm -rf command - destructive operation"),
-    (r'DROP\s+TABLE', "DROP TABLE - database destruction"),
+    (r"rm\s+-rf", "rm -rf command - destructive operation"),
+    (r"DROP\s+TABLE", "DROP TABLE - database destruction"),
 ]
 
 # Required fields in requirements JSON
@@ -34,21 +38,18 @@ REQUIRED_REQUIREMENTS_FIELDS = [
     "inputs",
     "outputs",
     "triggers",
-    "constraints"
+    "constraints",
 ]
 
 
 def validate_email(email: str) -> ValidationResult:
     """Validate email format"""
-    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
     if re.match(pattern, email):
         return ValidationResult(is_valid=True)
     else:
-        return ValidationResult(
-            is_valid=False,
-            errors=["Invalid email format"]
-        )
+        return ValidationResult(is_valid=False, errors=["Invalid email format"])
 
 
 def validate_agent_code(code: str) -> ValidationResult:
@@ -58,7 +59,7 @@ def validate_agent_code(code: str) -> ValidationResult:
 
     # Check syntax
     try:
-        compile(code, '<string>', 'exec')
+        compile(code, "<string>", "exec")
     except SyntaxError as e:
         errors.append(f"Syntax error: {e}")
 
@@ -80,11 +81,7 @@ def validate_agent_code(code: str) -> ValidationResult:
             warnings.append("Potential hardcoded credentials detected")
             break
 
-    return ValidationResult(
-        is_valid=len(errors) == 0,
-        errors=errors,
-        warnings=warnings
-    )
+    return ValidationResult(is_valid=len(errors) == 0, errors=errors, warnings=warnings)
 
 
 def validate_requirements_json(requirements: Dict[str, Any]) -> ValidationResult:
@@ -130,11 +127,7 @@ def validate_requirements_json(requirements: Dict[str, Any]) -> ValidationResult
             elif constraints["max_execution_time"] > 900:  # 15 minutes
                 warnings.append("Execution time > 15 minutes may timeout")
 
-    return ValidationResult(
-        is_valid=len(errors) == 0,
-        errors=errors,
-        warnings=warnings
-    )
+    return ValidationResult(is_valid=len(errors) == 0, errors=errors, warnings=warnings)
 
 
 def validate_json_string(json_string: str) -> ValidationResult:
@@ -143,7 +136,4 @@ def validate_json_string(json_string: str) -> ValidationResult:
         json.loads(json_string)
         return ValidationResult(is_valid=True)
     except json.JSONDecodeError as e:
-        return ValidationResult(
-            is_valid=False,
-            errors=[f"Invalid JSON: {e}"]
-        )
+        return ValidationResult(is_valid=False, errors=[f"Invalid JSON: {e}"])

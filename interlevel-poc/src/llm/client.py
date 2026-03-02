@@ -30,19 +30,24 @@ class LLMClient:
 
         if self.provider == "ollama":
             from src.llm.providers.ollama import OllamaProvider
+
             self._client = OllamaProvider()
         elif self.provider == "openai":
             from src.llm.providers.openai import OpenAIProvider
+
             self._client = OpenAIProvider()
         elif self.provider == "anthropic":
             from src.llm.providers.anthropic import AnthropicProvider
+
             self._client = AnthropicProvider()
         else:
             raise ValueError(f"Unknown LLM provider: {self.provider}")
 
         logger.info(f"LLM provider initialized: {self.provider}")
 
-    def generate(self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7) -> str:
+    def generate(
+        self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7
+    ) -> str:
         """
         Generate text from a prompt
 
@@ -54,7 +59,9 @@ class LLMClient:
         Returns:
             Generated text
         """
-        logger.debug("Generating text", prompt_length=len(prompt), max_tokens=max_tokens)
+        logger.debug(
+            "Generating text", prompt_length=len(prompt), max_tokens=max_tokens
+        )
 
         try:
             response = self._client.generate(prompt, max_tokens, temperature)
@@ -68,7 +75,7 @@ class LLMClient:
         self,
         messages: List[Dict[str, str]],
         max_tokens: int = 1000,
-        temperature: float = 0.7
+        temperature: float = 0.7,
     ) -> str:
         """
         Chat-style interaction with messages
@@ -108,7 +115,11 @@ class LLMClient:
     @property
     def model_name(self) -> str:
         """Get current model name"""
-        return self._client.model_name if hasattr(self._client, 'model_name') else "unknown"
+        return (
+            self._client.model_name
+            if hasattr(self._client, "model_name")
+            else "unknown"
+        )
 
 
 class BaseLLMProvider:
@@ -117,5 +128,7 @@ class BaseLLMProvider:
     def generate(self, prompt: str, max_tokens: int, temperature: float) -> str:
         raise NotImplementedError
 
-    def chat(self, messages: List[Dict[str, str]], max_tokens: int, temperature: float) -> str:
+    def chat(
+        self, messages: List[Dict[str, str]], max_tokens: int, temperature: float
+    ) -> str:
         raise NotImplementedError
