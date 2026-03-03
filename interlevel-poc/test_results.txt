@@ -1,0 +1,28 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\Nikol\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Nikol\OneDrive\Documents\GitHub\Interlevel\interlevel-poc
+configfile: pytest.ini
+plugins: anyio-4.12.1, cov-4.1.0
+collecting ... collected 15 items
+
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_module_imports PASSED [  6%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_accepts_session_id_argument PASSED [ 13%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_prompts_for_session_id_when_not_provided PASSED [ 20%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_validates_session_id PASSED [ 26%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_output_format PASSED [ 33%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_error_handling PASSED [ 40%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_header_display PASSED [ 46%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_suggests_next_step PASSED [ 53%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsIntegration::test_cli_with_mock_session PASSED [ 60%]
+tests/unit/test_agent_req.py::test_generate_requirements SKIPPED (LLM
+provider timeout)                                                        [ 66%]
+tests/unit/test_agent_req.py::test_save_and_load_requirements PASSED     [ 73%]
+tests/unit/test_agent_req.py::test_create_agent_record PASSED            [ 80%]
+tests/unit/test_agent_req.py::test_requirements_json_structure PASSED    [ 86%]
+tests/unit/test_agent_req.py::test_requirements_file_persistence PASSED  [ 93%]
+tests/unit/test_agent_req.py::test_agent_record_status PASSED            [100%]
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\unit\test_agent_req.py:70: LLM provider timeout
+================== 14 passed, 1 skipped in 147.54s (0:02:27) ==================
