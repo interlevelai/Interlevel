@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interlevel POC - Testing Interface</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .phase-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .phase-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .phase-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .phase-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .phase-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .phase-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .phase-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
+        .btn-test {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-test:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-complete { background: #d1fae5; color: #065f46; }
+        .status-testing { background: #fef3c7; color: #92400e; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+
+        .result-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stats-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .workflow-step {
+            padding: 15px;
+            border-left: 3px solid var(--primary-color);
+            margin-bottom: 15px;
+            background: #f9fafb;
+            border-radius: 5px;
+        }
+
+        pre {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .code-preview {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="bi bi-lightning-charge-fill"></i> Interlevel POC</h1>
+                <p class="mb-0">Complete Testing Interface for Phases 1-5</p>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div><i class="bi bi-people-fill"></i> Users</div>
+                        <div class="stats-number" id="stats-users">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div><i class="bi bi-chat-dots-fill"></i> Sessions</div>
+                        <div class="stats-number" id="stats-sessions">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div><i class="bi bi-robot"></i> Agents</div>
+                        <div class="stats-number" id="stats-agents">-</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <div><i class="bi bi-play-circle-fill"></i> Executions</div>
+                        <div class="stats-number" id="stats-executions">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 1: Foundation -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-icon phase-1">
+                        <i class="bi bi-gear-fill" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Phase 1: Foundation</h3>
+                        <small class="text-muted">Database, Logging, Validators</small>
+                    </div>
+                    <span class="status-badge status-complete">✅ Complete</span>
+                </div>
+                <p>Tests core infrastructure: database connection, logging system, and validation utilities.</p>
+                <button class="btn btn-test" onclick="testPhase1()">
+                    <i class="bi bi-play-fill"></i> Test Phase 1
+                </button>
+                <div id="phase1-result" class="result-box" style="display: none;"></div>
+            </div>
+
+            <!-- Phase 2: LLM Integration -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-icon phase-2">
+                        <i class="bi bi-cpu-fill" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Phase 2: LLM Integration</h3>
+                        <small class="text-muted">LLM Client, Ollama Provider</small>
+                    </div>
+                    <span class="status-badge status-complete">✅ Complete</span>
+                </div>
+                <p>Tests LLM connectivity and provider integration.</p>
+                <button class="btn btn-test" onclick="testPhase2()">
+                    <i class="bi bi-play-fill"></i> Test Phase 2
+                </button>
+                <div id="phase2-result" class="result-box" style="display: none;"></div>
+            </div>
+
+            <!-- Phase 3: Clarification -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-icon phase-3">
+                        <i class="bi bi-chat-square-text-fill" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Phase 3: Clarification Service</h3>
+                        <small class="text-muted">User Intent → Agent Requirements</small>
+                    </div>
+                    <span class="status-badge status-complete">✅ Complete</span>
+                </div>
+                <p>Interactive clarification dialog to understand user intent.</p>
+
+                <div class="mb-3">
+                    <label class="form-label">Your Intent</label>
+                    <input type="text" class="form-control" id="phase3-intent"
+                           placeholder="e.g., I want to create a weather monitoring agent">
+                </div>
+
+                <button class="btn btn-test" onclick="testPhase3()">
+                    <i class="bi bi-play-fill"></i> Start Clarification
+                </button>
+
+                <div id="phase3-result" class="result-box" style="display: none;"></div>
+                <div id="phase3-conversation" style="display: none; margin-top: 15px;"></div>
+            </div>
+
+            <!-- Phase 4: Requirements Generation -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-icon phase-4">
+                        <i class="bi bi-file-earmark-text-fill" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Phase 4: Requirements Model</h3>
+                        <small class="text-muted">Conversation → Structured JSON</small>
+                    </div>
+                    <span class="status-badge status-complete">✅ Complete</span>
+                </div>
+                <p>Converts clarification session into structured requirements JSON.</p>
+
+                <div class="mb-3">
+                    <label class="form-label">Session ID (from Phase 3)</label>
+                    <input type="text" class="form-control" id="phase4-session-id"
+                           placeholder="Enter session ID">
+                </div>
+
+                <button class="btn btn-test" onclick="testPhase4()">
+                    <i class="bi bi-play-fill"></i> Generate Requirements
+                </button>
+
+                <div id="phase4-result" class="result-box" style="display: none;"></div>
+            </div>
+
+            <!-- Phase 5: Universal Executor -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-icon phase-5">
+                        <i class="bi bi-code-slash" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Phase 5: Universal Executor</h3>
+                        <small class="text-muted">Requirements → Python Code</small>
+                    </div>
+                    <span class="status-badge status-complete">✅ Complete</span>
+                </div>
+                <p>Generates executable Python agent code from requirements.</p>
+
+                <div class="mb-3">
+                    <label class="form-label">Agent ID (from Phase 4)</label>
+                    <input type="text" class="form-control" id="phase5-agent-id"
+                           placeholder="Enter agent ID">
+                </div>
+
+                <button class="btn btn-test me-2" onclick="testPhase5Generate()">
+                    <i class="bi bi-play-fill"></i> Generate Code
+                </button>
+
+                <button class="btn btn-outline-secondary" onclick="testPhase5Templates()">
+                    <i class="bi bi-list-ul"></i> View Templates
+                </button>
+
+                <div id="phase5-result" class="result-box" style="display: none;"></div>
+            </div>
+
+            <!-- Complete Workflow Test -->
+            <div class="phase-card" style="border: 3px solid var(--primary-color);">
+                <div class="phase-header">
+                    <div class="phase-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="bi bi-lightning-charge-fill" style="color: white;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-0">Complete Workflow Test</h3>
+                        <small class="text-muted">Test all phases together</small>
+                    </div>
+                </div>
+                <p>Run a complete end-to-end test from user intent to generated code.</p>
+                <button class="btn btn-test btn-lg" onclick="testCompleteWorkflow()">
+                    <i class="bi bi-rocket-takeoff-fill"></i> Run Complete Workflow
+                </button>
+                <div id="complete-result" class="result-box" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Global variables
+        let currentSessionId = null;
+        let currentAgentId = null;
+
+        // Load dashboard stats on page load
+        window.onload = function() {
+            loadDashboardStats();
+        };
+
+        // Load dashboard statistics
+        function loadDashboardStats() {
+            fetch('/api/dashboard/stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('stats-users').textContent = data.users || 0;
+                    document.getElementById('stats-sessions').textContent = data.sessions || 0;
+                    document.getElementById('stats-agents').textContent = data.agents || 0;
+                    document.getElementById('stats-executions').textContent = data.executions || 0;
+                })
+                .catch(error => console.error('Error loading stats:', error));
+        }
+
+        // Test Phase 1
+        function testPhase1() {
+            const resultDiv = document.getElementById('phase1-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Testing Phase 1...';
+
+            fetch('/api/test/phase1/status')
+                .then(response => response.json())
+                .then(data => {
+                    let html = `<strong>${data.phase}</strong><br><br>`;
+                    data.components.forEach(comp => {
+                        html += `${comp.status} ${comp.name}: ${comp.details}<br>`;
+                    });
+                    resultDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                });
+        }
+
+        // Test Phase 2
+        function testPhase2() {
+            const resultDiv = document.getElementById('phase2-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Testing Phase 2...';
+
+            fetch('/api/test/phase2/status')
+                .then(response => response.json())
+                .then(data => {
+                    let html = `<strong>${data.phase}</strong><br><br>`;
+                    data.components.forEach(comp => {
+                        html += `${comp.status} ${comp.name}: ${comp.details}<br>`;
+                    });
+                    resultDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                });
+        }
+
+        // Test Phase 3
+        function testPhase3() {
+            const intent = document.getElementById('phase3-intent').value;
+            if (!intent) {
+                alert('Please enter your intent');
+                return;
+            }
+
+            const resultDiv = document.getElementById('phase3-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Starting clarification session...';
+
+            fetch('/api/test/phase3/start-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: 'web-test-user',
+                    intent: intent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentSessionId = data.session_id;
+                    resultDiv.innerHTML = `
+                        ✅ Session started!<br>
+                        <strong>Session ID:</strong> ${data.session_id}<br>
+                        <strong>Status:</strong> ${data.status}<br><br>
+                        <strong>First Question:</strong> ${data.first_question || 'Complete'}
+                    `;
+
+                    // Auto-fill session ID for Phase 4
+                    document.getElementById('phase4-session-id').value = data.session_id;
+                } else {
+                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+            });
+        }
+
+        // Test Phase 4
+        function testPhase4() {
+            const sessionId = document.getElementById('phase4-session-id').value;
+            if (!sessionId) {
+                alert('Please enter a session ID');
+                return;
+            }
+
+            const resultDiv = document.getElementById('phase4-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Generating requirements...';
+
+            fetch('/api/test/phase4/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: sessionId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentAgentId = data.agent_id;
+                    resultDiv.innerHTML = `
+                        ✅ Requirements generated!<br>
+                        <strong>Agent ID:</strong> ${data.agent_id}<br>
+                        <strong>Name:</strong> ${data.name}<br>
+                        <strong>File:</strong> ${data.filepath}<br><br>
+                        <pre>${JSON.stringify(data.requirements, null, 2)}</pre>
+                    `;
+
+                    // Auto-fill agent ID for Phase 5
+                    document.getElementById('phase5-agent-id').value = data.agent_id;
+                } else {
+                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+            });
+        }
+
+        // Test Phase 5 - Generate Code
+        function testPhase5Generate() {
+            const agentId = document.getElementById('phase5-agent-id').value;
+            if (!agentId) {
+                alert('Please enter an agent ID');
+                return;
+            }
+
+            const resultDiv = document.getElementById('phase5-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Generating code...';
+
+            fetch('/api/test/phase5/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ agent_id: agentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        ✅ Code generated!<br>
+                        <strong>Agent ID:</strong> ${data.agent_id}<br>
+                        <strong>Template Used:</strong> ${data.template_used}<br>
+                        <strong>Code Path:</strong> ${data.code_path}<br>
+                        <strong>Code Size:</strong> ${data.code_size} bytes<br><br>
+                        <strong>Code Preview:</strong>
+                        <div class="code-preview">${escapeHtml(data.code_preview)}</div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+            });
+        }
+
+        // Test Phase 5 - View Templates
+        function testPhase5Templates() {
+            const resultDiv = document.getElementById('phase5-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Loading templates...';
+
+            fetch('/api/test/phase5/templates')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let html = '<strong>Available Templates:</strong><br><br>';
+                        data.templates.forEach(template => {
+                            html += `
+                                <div class="workflow-step">
+                                    <strong>${template.name}</strong><br>
+                                    ${template.description}<br>
+                                    <small class="text-muted">Use case: ${template.use_case}</small>
+                                </div>
+                            `;
+                        });
+                        resultDiv.innerHTML = html;
+                    } else {
+                        resultDiv.innerHTML = `❌ Error: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                });
+        }
+
+        // Test Complete Workflow
+        function testCompleteWorkflow() {
+            const resultDiv = document.getElementById('complete-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="loading"></div> Running complete workflow...';
+
+            fetch('/api/test/complete-workflow', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: 'workflow-test-user',
+                    intent: 'Create a weather monitoring agent'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let html = '<strong>Workflow Results:</strong><br><br>';
+
+                if (data.steps) {
+                    data.steps.forEach(step => {
+                        const icon = step.status === 'complete' ? '✅' :
+                                   step.status === 'in_progress' ? '⏳' : '❌';
+                        html += `
+                            <div class="workflow-step">
+                                ${icon} <strong>${step.phase}</strong><br>
+                                ${step.step}<br>
+                                ${step.result || ''}
+                            </div>
+                        `;
+                    });
+                }
+
+                html += `<br><strong>Status:</strong> ${data.success ? '✅ Success' : '❌ Failed'}<br>`;
+                html += `<strong>Message:</strong> ${data.message || 'Complete'}`;
+
+                resultDiv.innerHTML = html;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+            });
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

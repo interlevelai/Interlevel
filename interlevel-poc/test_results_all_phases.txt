@@ -1,0 +1,239 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\Nikol\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Nikol\OneDrive\Documents\GitHub\Interlevel\interlevel-poc
+configfile: pytest.ini
+plugins: anyio-4.12.1, cov-4.1.0
+collecting ... collected 117 items
+
+tests/unit/test_agent_req.py::test_generate_requirements SKIPPED (LLM
+provider timeout)                                                        [  0%]
+tests/unit/test_agent_req.py::test_save_and_load_requirements PASSED     [  1%]
+tests/unit/test_agent_req.py::test_create_agent_record PASSED            [  2%]
+tests/unit/test_agent_req.py::test_requirements_json_structure PASSED    [  3%]
+tests/unit/test_agent_req.py::test_requirements_file_persistence PASSED  [  4%]
+tests/unit/test_agent_req.py::test_agent_record_status PASSED            [  5%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_module_imports PASSED [  5%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_accepts_session_id_argument PASSED [  6%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_prompts_for_session_id_when_not_provided PASSED [  7%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_validates_session_id PASSED [  8%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_output_format PASSED [  9%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_error_handling PASSED [ 10%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_header_display PASSED [ 11%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsCLI::test_cli_suggests_next_step PASSED [ 11%]
+tests/unit/test_generate_requirements_cli.py::TestGenerateRequirementsIntegration::test_cli_with_mock_session PASSED [ 12%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_session_to_requirements_model_flow PASSED [ 13%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_requirements_model_creates_agent_record PASSED [ 14%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_requirements_file_contains_valid_json PASSED [ 15%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_cli_loads_and_displays_requirements PASSED [ 16%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_user_to_agent_relationship PASSED [ 17%]
+tests/unit/test_integration_workflow.py::TestEndToEndWorkflow::test_session_to_agent_creation_pipeline PASSED [ 17%]
+tests/unit/test_integration_workflow.py::TestCLIServiceIntegration::test_cli_service_instantiation PASSED [ 18%]
+tests/unit/test_integration_workflow.py::TestCLIServiceIntegration::test_requirements_model_database_access PASSED [ 19%]
+tests/unit/test_integration_workflow.py::TestCLIServiceIntegration::test_cli_mock_workflow PASSED [ 20%]
+tests/unit/test_integration_workflow.py::TestDataIntegrity::test_requirements_json_roundtrip PASSED [ 21%]
+tests/unit/test_integration_workflow.py::TestDataIntegrity::test_database_agent_record_integrity PASSED [ 22%]
+tests/unit/test_phase1_foundation.py::test_settings_loaded PASSED        [ 23%]
+tests/unit/test_phase1_foundation.py::test_settings_path_resolution PASSED [ 23%]
+tests/unit/test_phase1_foundation.py::test_settings_directories_exist PASSED [ 24%]
+tests/unit/test_phase1_foundation.py::test_database_models_import PASSED [ 25%]
+tests/unit/test_phase1_foundation.py::test_database_user_model FAILED    [ 26%]
+tests/unit/test_phase1_foundation.py::test_database_agent_model FAILED   [ 27%]
+tests/unit/test_phase1_foundation.py::test_database_execution_model FAILED [ 28%]
+tests/unit/test_phase1_foundation.py::test_database_session_model FAILED [ 29%]
+tests/unit/test_phase1_foundation.py::test_database_schemas_import PASSED [ 29%]
+tests/unit/test_phase1_foundation.py::test_logger_initialization PASSED  [ 30%]
+tests/unit/test_phase1_foundation.py::test_logger_correlation_id PASSED  [ 31%]
+tests/unit/test_phase1_foundation.py::test_validator_email_valid PASSED  [ 32%]
+tests/unit/test_phase1_foundation.py::test_validator_email_invalid PASSED [ 33%]
+tests/unit/test_phase1_foundation.py::test_validator_json_string_valid PASSED [ 34%]
+tests/unit/test_phase1_foundation.py::test_validator_json_string_invalid PASSED [ 35%]
+tests/unit/test_phase1_foundation.py::test_validator_code_clean PASSED   [ 35%]
+tests/unit/test_phase1_foundation.py::test_validator_code_syntax_error PASSED [ 36%]
+tests/unit/test_phase1_foundation.py::test_validator_code_dangerous_patterns PASSED [ 37%]
+tests/unit/test_phase1_foundation.py::test_validator_requirements_valid PASSED [ 38%]
+tests/unit/test_phase1_foundation.py::test_validator_requirements_missing_fields PASSED [ 39%]
+tests/unit/test_phase2_llm.py::test_llm_client_initialization PASSED     [ 40%]
+tests/unit/test_phase2_llm.py::test_llm_client_model_name PASSED         [ 41%]
+tests/unit/test_phase2_llm.py::test_llm_client_token_counting PASSED     [ 41%]
+tests/unit/test_phase2_llm.py::test_ollama_provider_initialization PASSED [ 42%]
+tests/unit/test_phase2_llm.py::test_ollama_provider_connection PASSED    [ 43%]
+tests/unit/test_phase2_llm.py::test_ollama_provider_model_name PASSED    [ 44%]
+tests/unit/test_phase2_llm.py::test_ollama_provider_generate PASSED      [ 45%]
+tests/unit/test_phase2_llm.py::test_ollama_provider_chat PASSED          [ 46%]
+tests/unit/test_phase3_clarification.py::test_clarification_service_initialization PASSED [ 47%]
+tests/unit/test_phase3_clarification.py::test_clarification_start_session PASSED [ 47%]
+tests/unit/test_phase3_clarification.py::test_clarification_get_session PASSED [ 48%]
+tests/unit/test_phase3_clarification.py::test_clarification_add_response PASSED [ 49%]
+tests/unit/test_phase3_clarification.py::test_clarification_session_expiration PASSED [ 50%]
+tests/unit/test_phase3_clarification.py::test_api_health_endpoint PASSED [ 51%]
+tests/unit/test_phase3_clarification.py::test_api_status_endpoint PASSED [ 52%]
+tests/unit/test_phase3_clarification.py::test_api_start_session_endpoint PASSED [ 52%]
+tests/unit/test_phase3_clarification.py::test_api_start_session_missing_fields PASSED [ 53%]
+tests/unit/test_phase3_clarification.py::test_api_get_session_endpoint PASSED [ 54%]
+tests/unit/test_phase3_clarification.py::test_api_get_session_not_found PASSED [ 55%]
+tests/unit/test_phase3_clarification.py::test_api_add_response_endpoint PASSED [ 56%]
+tests/unit/test_phase3_clarification.py::test_api_add_response_missing_fields PASSED [ 57%]
+tests/unit/test_phase3_clarification.py::test_api_workflow_complete_conversation PASSED [ 58%]
+tests/unit/test_phase4_requirements.py::test_agent_requirement_model_initialization PASSED [ 58%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_format_conversation PASSED [ 59%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_extract_json PASSED [ 60%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_extract_json_invalid PASSED [ 61%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_save_requirements PASSED [ 62%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_load_requirements PASSED [ 63%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_load_nonexistent PASSED [ 64%]
+tests/unit/test_phase4_requirements.py::test_requirements_model_create_agent_record PASSED [ 64%]
+tests/unit/test_phase4_requirements.py::test_api_validate_requirements_endpoint FAILED [ 65%]
+tests/unit/test_phase4_requirements.py::test_api_validate_requirements_invalid FAILED [ 66%]
+tests/unit/test_phase4_requirements.py::test_api_validate_requirements_missing_body FAILED [ 67%]
+tests/unit/test_phase4_requirements.py::test_api_generate_requirements_missing_session FAILED [ 68%]
+tests/unit/test_phase4_requirements.py::test_api_load_requirements_endpoint FAILED [ 69%]
+tests/unit/test_phase4_requirements.py::test_api_load_requirements_not_found FAILED [ 70%]
+tests/unit/test_phase4_requirements.py::test_requirements_generation_workflow PASSED [ 70%]
+tests/unit/test_phase5_executor.py::TestExecutorServiceInitialization::test_executor_service_creates PASSED [ 71%]
+tests/unit/test_phase5_executor.py::TestTemplateSelection::test_select_base_template_for_manual_agent PASSED [ 72%]
+tests/unit/test_phase5_executor.py::TestTemplateSelection::test_select_api_template_for_api_agent PASSED [ 73%]
+tests/unit/test_phase5_executor.py::TestTemplateSelection::test_select_scheduled_template_for_scheduled_agent PASSED [ 74%]
+tests/unit/test_phase5_executor.py::TestTemplateLoading::test_load_base_template PASSED [ 75%]
+tests/unit/test_phase5_executor.py::TestTemplateLoading::test_load_api_template PASSED [ 76%]
+tests/unit/test_phase5_executor.py::TestTemplateLoading::test_load_scheduled_template PASSED [ 76%]
+tests/unit/test_phase5_executor.py::TestTemplateLoading::test_load_nonexistent_template_raises_error PASSED [ 77%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_extract_code_blocks_from_markdown PASSED [ 78%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_extract_code_blocks_without_language PASSED [ 79%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_extract_code_blocks_fallback_to_raw PASSED [ 80%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_build_prompt_includes_requirements PASSED [ 81%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_build_auth_headers_api_key PASSED [ 82%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_build_auth_headers_bearer PASSED [ 82%]
+tests/unit/test_phase5_executor.py::TestCodeGeneration::test_build_auth_headers_none PASSED [ 83%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_validate_valid_python_syntax PASSED [ 84%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_validate_invalid_python_syntax PASSED [ 85%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_security_scan_patterns_safe_code PASSED [ 86%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_security_scan_patterns_dangerous_code PASSED [ 87%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_format_code_valid PASSED [ 88%]
+tests/unit/test_phase5_executor.py::TestValidationPipeline::test_validate_and_format_complete_pipeline PASSED [ 88%]
+tests/unit/test_phase5_executor.py::TestCodeAssembly::test_assemble_code_replaces_placeholders PASSED [ 89%]
+tests/unit/test_phase5_executor.py::TestCodeAssembly::test_assemble_code_includes_business_logic PASSED [ 90%]
+tests/unit/test_phase5_executor.py::TestFileOperations::test_save_generated_code_creates_file PASSED [ 91%]
+tests/unit/test_phase5_executor.py::TestFileOperations::test_save_generated_code_creates_directory PASSED [ 92%]
+tests/unit/test_phase5_executor.py::TestFileOperations::test_update_agent_record_updates_database PASSED [ 93%]
+tests/unit/test_phase5_executor.py::TestCompleteGeneration::test_generate_agent_code_complete_workflow SKIPPED [ 94%]
+tests/unit/test_phase5_executor.py::TestCompleteGeneration::test_generate_agent_code_missing_requirements PASSED [ 94%]
+tests/unit/test_phase5_executor.py::TestErrorHandling::test_executor_handles_malformed_requirements PASSED [ 95%]
+tests/unit/test_phase5_executor.py::TestErrorHandling::test_executor_continues_without_bandit PASSED [ 96%]
+tests/unit/test_phase5_executor.py::TestErrorHandling::test_executor_continues_without_black PASSED [ 97%]
+tests/unit/test_phase5_executor.py::TestTemplateVariations::test_base_template_structure PASSED [ 98%]
+tests/unit/test_phase5_executor.py::TestTemplateVariations::test_api_template_has_api_functions PASSED [ 99%]
+tests/unit/test_phase5_executor.py::TestTemplateVariations::test_scheduled_template_has_state_management PASSED [100%]
+
+================================== FAILURES ===================================
+__________________________ test_database_user_model ___________________________
+tests\unit\test_phase1_foundation.py:59: in test_database_user_model
+    assert user.user_id is not None
+E   AssertionError: assert None is not None
+E    +  where None = <User(user_id='None', email='test@example.com')>.user_id
+__________________________ test_database_agent_model __________________________
+tests\unit\test_phase1_foundation.py:74: in test_database_agent_model
+    assert agent.agent_id is not None
+E   AssertionError: assert None is not None
+E    +  where None = <Agent(agent_id='None', name='Test Agent', status='draft')>.agent_id
+________________________ test_database_execution_model ________________________
+tests\unit\test_phase1_foundation.py:87: in test_database_execution_model
+    assert execution.tokens_used == 0
+E   AssertionError: assert None == 0
+E    +  where None = <Execution(execution_id='None', status='pending')>.tokens_used
+_________________________ test_database_session_model _________________________
+tests\unit\test_phase1_foundation.py:98: in test_database_session_model
+    assert session.status == "active"
+E   AssertionError: assert None == 'active'
+E    +  where None = <Session(session_id='None', status='None')>.status
+___________________ test_api_validate_requirements_endpoint ___________________
+tests\unit\test_phase4_requirements.py:246: in test_api_validate_requirements_endpoint
+    assert response.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:00.734945", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:00.787090", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:00.789089", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.734945", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.787090", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.789089", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+___________________ test_api_validate_requirements_invalid ____________________
+tests\unit\test_phase4_requirements.py:258: in test_api_validate_requirements_invalid
+    assert response.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:00.802088", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:00.804088", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:00.806088", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.802088", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.804088", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.806088", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+_________________ test_api_validate_requirements_missing_body _________________
+tests\unit\test_phase4_requirements.py:270: in test_api_validate_requirements_missing_body
+    assert response.status_code == 400
+E   assert 404 == 400
+E    +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:00.826270", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:00.828284", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:00.830282", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.826270", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.828284", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.830282", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+_______________ test_api_generate_requirements_missing_session ________________
+tests\unit\test_phase4_requirements.py:281: in test_api_generate_requirements_missing_session
+    assert response.status_code == 400
+E   assert 404 == 400
+E    +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:00.842283", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:00.844284", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:00.846283", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.842283", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.844284", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.846283", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+_____________________ test_api_load_requirements_endpoint _____________________
+tests\unit\test_phase4_requirements.py:312: in test_api_load_requirements_endpoint
+    assert response.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:00.857255", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:00.859241", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:00.860241", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.857255", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.859241", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:00.860241", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": "2026-03-03T00:34:00.861240", "level": "INFO", "logger": "src.llm.client", "message": "Initializing LLM provider: ollama"}
+{"timestamp": "2026-03-03T00:34:02.893126", "level": "INFO", "logger": "src.llm.providers.ollama", "message": "Connected to Ollama server at http://localhost:11434"}
+{"timestamp": "2026-03-03T00:34:02.893762", "level": "INFO", "logger": "src.llm.client", "message": "LLM provider initialized: ollama"}
+{"timestamp": "2026-03-03T00:34:02.893762", "level": "INFO", "logger": "src.services.agent_req", "message": "Agent Requirement Model initialized"}
+{"timestamp": "2026-03-03T00:34:02.894479", "level": "INFO", "logger": "src.services.agent_req", "message": "Requirements saved to C:\\Users\\Nikol\\OneDrive\\Documents\\GitHub\\Interlevel\\interlevel-poc\\data\\requirements\\api-test-123.json"}
+------------------------------ Captured log call ------------------------------
+INFO     src.llm.client:logger.py:59 {"timestamp": "2026-03-03T00:34:00.861240", "level": "INFO", "logger": "src.llm.client", "message": "Initializing LLM provider: ollama"}
+INFO     src.llm.providers.ollama:logger.py:59 {"timestamp": "2026-03-03T00:34:02.893126", "level": "INFO", "logger": "src.llm.providers.ollama", "message": "Connected to Ollama server at http://localhost:11434"}
+INFO     src.llm.client:logger.py:59 {"timestamp": "2026-03-03T00:34:02.893762", "level": "INFO", "logger": "src.llm.client", "message": "LLM provider initialized: ollama"}
+INFO     src.services.agent_req:logger.py:59 {"timestamp": "2026-03-03T00:34:02.893762", "level": "INFO", "logger": "src.services.agent_req", "message": "Agent Requirement Model initialized"}
+INFO     src.services.agent_req:logger.py:59 {"timestamp": "2026-03-03T00:34:02.894479", "level": "INFO", "logger": "src.services.agent_req", "message": "Requirements saved to C:\\Users\\Nikol\\OneDrive\\Documents\\GitHub\\Interlevel\\interlevel-poc\\data\\requirements\\api-test-123.json"}
+____________________ test_api_load_requirements_not_found _____________________
+tests\unit\test_phase4_requirements.py:326: in test_api_load_requirements_not_found
+    assert 'error' in response.json
+E   TypeError: argument of type 'NoneType' is not iterable
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}\n\u2705 Database initialized\n{"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}\n{"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+----------------------------- Captured log setup ------------------------------
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Initializing database..."}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Test user created/retrieved: test@interlevel.com"}
+INFO     src.api.app:logger.py:59 {"timestamp": "2026-03-03T00:34:02.899503", "level": "INFO", "logger": "src.api.app", "message": "Flask application created successfully"}
+=========================== short test summary info ===========================
+SKIPPED [1] tests\unit\test_agent_req.py:70: LLM provider timeout
+SKIPPED [1] tests\unit\test_phase5_executor.py:412: Requires LLM provider
+FAILED tests/unit/test_phase1_foundation.py::test_database_user_model - Asser...
+FAILED tests/unit/test_phase1_foundation.py::test_database_agent_model - Asse...
+FAILED tests/unit/test_phase1_foundation.py::test_database_execution_model - ...
+FAILED tests/unit/test_phase1_foundation.py::test_database_session_model - As...
+FAILED tests/unit/test_phase4_requirements.py::test_api_validate_requirements_endpoint
+FAILED tests/unit/test_phase4_requirements.py::test_api_validate_requirements_invalid
+FAILED tests/unit/test_phase4_requirements.py::test_api_validate_requirements_missing_body
+FAILED tests/unit/test_phase4_requirements.py::test_api_generate_requirements_missing_session
+FAILED tests/unit/test_phase4_requirements.py::test_api_load_requirements_endpoint
+FAILED tests/unit/test_phase4_requirements.py::test_api_load_requirements_not_found
+============ 10 failed, 105 passed, 2 skipped in 630.56s (0:10:30) ============
