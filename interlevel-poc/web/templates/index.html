@@ -273,7 +273,22 @@
                 </button>
 
                 <div id="phase3-result" class="result-box" style="display: none;"></div>
-                <div id="phase3-conversation" style="display: none; margin-top: 15px;"></div>
+
+                <!-- Conversation Interface -->
+                <div id="phase3-conversation" style="display: none; margin-top: 15px;">
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Question:</strong></label>
+                        <div id="phase3-question" class="alert alert-info"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Answer:</label>
+                        <input type="text" class="form-control" id="phase3-answer"
+                               placeholder="Type your answer here...">
+                    </div>
+                    <button class="btn btn-test" onclick="answerPhase3()">
+                        <i class="bi bi-send-fill"></i> Submit Answer
+                    </button>
+                </div>
             </div>
 
             <!-- Phase 4: Requirements Generation -->
@@ -448,9 +463,14 @@
                     resultDiv.innerHTML = `
                         ✅ Session started!<br>
                         <strong>Session ID:</strong> ${data.session_id}<br>
-                        <strong>Status:</strong> ${data.status}<br><br>
-                        <strong>First Question:</strong> ${data.first_question || 'Complete'}
+                        <strong>Status:</strong> ${data.status}
                     `;
+
+                    // Show conversation interface
+                    const convDiv = document.getElementById('phase3-conversation');
+                    const questionDiv = document.getElementById('phase3-question');
+                    convDiv.style.display = 'block';
+                    questionDiv.innerHTML = data.first_question || 'Complete';
 
                     // Auto-fill session ID for Phase 4
                     document.getElementById('phase4-session-id').value = data.session_id;
@@ -460,6 +480,59 @@
             })
             .catch(error => {
                 resultDiv.innerHTML = `❌ Error: ${error.message}`;
+            });
+        }
+
+        // Answer Phase 3 question
+        function answerPhase3() {
+            const answer = document.getElementById('phase3-answer').value;
+            if (!answer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            if (!currentSessionId) {
+                alert('No active session');
+                return;
+            }
+
+            const questionDiv = document.getElementById('phase3-question');
+            questionDiv.innerHTML = '<div class="loading"></div> Processing...';
+
+            fetch('/api/test/phase3/respond', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionId,
+                    response: answer
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Clear answer box
+                    document.getElementById('phase3-answer').value = '';
+
+                    if (data.is_complete) {
+                        questionDiv.innerHTML = `
+                            ✅ <strong>Clarification Complete!</strong><br>
+                            Session ID: ${currentSessionId}<br>
+                            You can now proceed to Phase 4.
+                        `;
+                        document.getElementById('phase4-session-id').value = currentSessionId;
+
+                        // Hide answer input since complete
+                        document.getElementById('phase3-answer').style.display = 'none';
+                        document.querySelector('#phase3-conversation button').style.display = 'none';
+                    } else {
+                        questionDiv.innerHTML = data.next_question;
+                    }
+                } else {
+                    questionDiv.innerHTML = `❌ Error: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                questionDiv.innerHTML = `❌ Error: ${error.message}`;
             });
         }
 

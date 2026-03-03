@@ -14,7 +14,13 @@ from flask_cors import CORS
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.models.database import SessionLocal, User, Agent, Session as DBSession, Execution
+import os
+from pathlib import Path
+
+# Fix database path for Windows/OneDrive
+os.environ['DATABASE_URL'] = f"sqlite:///{Path.home()}/interlevel_test.db"
+
+from src.models.database import SessionLocal, User, Agent, Session as DBSession, Execution, init_db
 from src.services.clarification import ClarificationService
 from src.services.agent_req import AgentRequirementModel
 from src.services.executor import ExecutorService
@@ -22,6 +28,11 @@ from src.llm.client import LLMClient
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+# Initialize database tables
+print("Initializing database...")
+init_db()
+print("✅ Database ready!")
 
 # Initialize Flask app
 app = Flask(__name__,
