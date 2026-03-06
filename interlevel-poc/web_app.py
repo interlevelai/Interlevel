@@ -202,7 +202,9 @@ def test_phase3_start_session():
             "success": True,
             "session_id": result["session_id"],
             "first_question": result.get("question", ""),
-            "status": result.get("status", "active")
+            "status": result.get("status", "active"),
+            "question_number": 1,
+            "total_questions": 3
         })
 
     except Exception as e:
@@ -223,11 +225,22 @@ def test_phase3_respond():
 
         result = clarification_service.add_response(session_id, response)
 
+        # Calculate question number from conversation
+        conversation = result.get("conversation", [])
+        # Count user responses (excluding initial intent) to determine which question is being asked
+        # Conversation format: [initial_intent, Q1, response1, Q2, response2, Q3, response3, ...]
+        # User responses after initial intent: len([responses]) = position in conversation / 2
+        user_response_count = len([msg for msg in conversation if msg.get("role") == "user"]) - 1  # -1 for initial intent
+        question_number = user_response_count + 1  # Next question being asked
+        total_questions = 3  # Expected number of clarifying questions
+
         return jsonify({
             "success": True,
             "next_question": result.get("question", ""),
             "status": result.get("status", "active"),
-            "is_complete": result.get("status") == "complete"
+            "is_complete": result.get("status") == "complete",
+            "question_number": question_number,
+            "total_questions": total_questions
         })
 
     except Exception as e:
@@ -264,11 +277,88 @@ def test_phase4_generate():
     try:
         data = request.get_json()
         session_id = data.get('session_id')
+        mode = data.get('mode', 'test')  # Default to test mode
 
         if not session_id:
             return jsonify({"error": "Missing session_id"}), 400
 
-        # Generate requirements
+        # Test mode: Return sample requirements instantly
+        if mode == 'test':
+            agent_id = f"test-agent-{int(datetime.now().timestamp())}"
+            sample_requirements = {
+                "agent_id": agent_id,
+                "version": "1.0",
+                "metadata": {
+                    "name": "Sample Weather Monitor Agent",
+                    "description": "Monitors weather conditions for specified cities",
+                    "created_at": datetime.now().isoformat(),
+                    "tags": ["weather", "monitoring", "sample"]
+                },
+                "purpose": "Monitor and report weather conditions",
+                "inputs": [
+                    {"name": "city", "type": "string", "required": True, "description": "City to monitor"}
+                ],
+                "outputs": [
+                    {"name": "temperature", "type": "number", "description": "Temperature in Celsius"},
+                    {"name": "conditions", "type": "string", "description": "Weather conditions"}
+                ],
+                "triggers": {"type": "manual"},
+                "platforms": [
+                    {
+                        "name": "Weather API",
+                        "base_url": "https://api.weather.com",
+                        "authentication": "api_key"
+                    }
+                ],
+                "constraints": {
+                    "max_execution_time": 300,
+                    "token_budget": 5000,
+                    "timeout": 30
+                },
+                "success_criteria": ["Returns weather data successfully"],
+                "failure_handling": {"retry_policy": {"max_retries": 3}},
+                "permissions": {
+                    "allowed_actions": ["http_request"],
+                    "disallowed_actions": ["system_command"],
+                    "required_secrets": ["WEATHER_API_KEY"]
+                }
+            }
+
+            # Save to file for Phase 5
+            req_dir = Path("data/requirements")
+            req_dir.mkdir(parents=True, exist_ok=True)
+            req_file = req_dir / f"{agent_id}.json"
+            with open(req_file, 'w') as f:
+                json.dump(sample_requirements, f, indent=2)
+
+            # Create agent record
+            user = db.query(User).filter(User.user_id == 'web-test-user').first()
+            if not user:
+                user = User(user_id='web-test-user', email='web-test@test.com', token_balance=50000)
+                db.add(user)
+                db.commit()
+                db.refresh(user)
+
+            agent = Agent(
+                agent_id=agent_id,
+                user_id=user.user_id,
+                name=sample_requirements["metadata"]["name"],
+                requirements_json=sample_requirements,
+                status="requirements_complete"
+            )
+            db.add(agent)
+            db.commit()
+
+            return jsonify({
+                "success": True,
+                "agent_id": agent_id,
+                "name": sample_requirements["metadata"]["name"],
+                "requirements": sample_requirements,
+                "filepath": str(req_file),
+                "mode": "test"
+            })
+
+        # Ollama mode: Real LLM generation
         result = requirements_service.generate_requirements(session_id)
 
         return jsonify({
@@ -310,11 +400,72 @@ def test_phase5_generate():
     try:
         data = request.get_json()
         agent_id = data.get('agent_id')
+        mode = data.get('mode', 'test')  # Default to test mode
 
         if not agent_id:
             return jsonify({"error": "Missing agent_id"}), 400
 
-        # Generate code
+        # Test mode: Return sample code instantly
+        if mode == 'test':
+            sample_code = '''#!/usr/bin/env python3
+"""
+Sample Weather Monitor Agent
+Generated in Test Mode
+"""
+import json
+import sys
+from datetime import datetime
+
+def main():
+    """Main agent execution"""
+    print("Sample Weather Monitor Agent")
+    print("=" * 50)
+
+    # Simulated input validation
+    inputs = {"city": "New York"}
+
+    # Simulated weather data
+    outputs = {
+        "city": inputs["city"],
+        "temperature": 22.5,
+        "conditions": "Partly Cloudy",
+        "timestamp": datetime.now().isoformat(),
+        "status": "success"
+    }
+
+    # Output results
+    print(json.dumps(outputs, indent=2))
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+'''
+
+            # Save to file
+            code_dir = Path("agents/generated")
+            code_dir.mkdir(parents=True, exist_ok=True)
+            code_path = code_dir / f"{agent_id}.py"
+            with open(code_path, 'w') as f:
+                f.write(sample_code)
+
+            # Update agent record
+            agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+            if agent:
+                agent.code_path = str(code_path)
+                agent.status = "code_generated"
+                db.commit()
+
+            return jsonify({
+                "success": True,
+                "agent_id": agent_id,
+                "code_path": str(code_path),
+                "template_used": "test_mode_sample",
+                "code_preview": sample_code[:1000] + "..." if len(sample_code) > 1000 else sample_code,
+                "code_size": len(sample_code),
+                "mode": "test"
+            })
+
+        # Ollama mode: Real code generation
         result = executor_service.generate_agent_code(agent_id)
 
         if not result.get("success"):

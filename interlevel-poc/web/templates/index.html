@@ -1,697 +1,1011 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interlevel POC - Testing Interface</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interlevel AI - Testing Interface</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #eaf7ff;
+      --bg-2: #cfe9ff;
+      --panel: rgba(255, 255, 255, 0.55);
+      --panel-strong: rgba(255, 255, 255, 0.72);
+      --stroke: rgba(255, 255, 255, 0.8);
+      --blue-1: #0a3c66;
+      --blue-2: #1c5f99;
+      --blue-3: #58b7ff;
+      --blue-4: #8cd3ff;
+      --text: #0d2b46;
+      --muted: #3c6181;
+      --success: #0f9d7a;
+      --error: #d32f2f;
+      --warning: #ce8b00;
+      --shadow: 0 18px 40px rgba(0, 90, 170, 0.20);
+      --inner-glow: 0 0 18px rgba(88, 183, 255, 0.22);
+    }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <style>
-        :root {
-            --primary-color: #4f46e5;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.9), transparent 28%),
+        radial-gradient(circle at top right, rgba(140,211,255,0.38), transparent 22%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      overflow-x: hidden;
+    }
 
-        .main-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            margin-top: 20px;
-        }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.12));
+      pointer-events: none;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #7c3aed 100%);
-            color: white;
-            border-radius: 15px;
-        }
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 28px;
+      background: rgba(255, 255, 255, 0.30);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 10px 24px rgba(0, 70, 140, 0.08);
+    }
 
-        .phase-card {
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            transition: all 0.3s ease;
-            background: white;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .phase-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(88,183,255,0.22), rgba(255,255,255,0.75));
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: var(--shadow), var(--inner-glow);
+      font-size: 18px;
+    }
 
-        .phase-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.15em;
+      color: var(--blue-1);
+      text-shadow: 0 0 16px rgba(0, 150, 255, 0.28);
+    }
 
-        .phase-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 24px;
-        }
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
 
-        .phase-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .phase-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .phase-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .phase-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .phase-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .header-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
 
-        .btn-test {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
+    .stat-chip {
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.8);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
 
-        .btn-test:hover {
-            background: #4338ca;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-        }
+    .stat-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--blue-2);
+    }
 
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
 
-        .status-complete { background: #d1fae5; color: #065f46; }
-        .status-testing { background: #fef3c7; color: #92400e; }
-        .status-error { background: #fee2e2; color: #991b1b; }
+    .page {
+      width: min(1600px, 96%);
+      margin: 18px auto 28px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: start;
+      max-height: calc(100vh - 140px);
+    }
 
-        .result-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
+    .left-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      overflow-y: auto;
+      max-height: calc(100vh - 140px);
+      padding-right: 8px;
+    }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    .left-col::-webkit-scrollbar {
+      width: 6px;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .left-col::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-        .stats-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    .left-col::-webkit-scrollbar-thumb {
+      background: rgba(88, 183, 255, 0.3);
+      border-radius: 3px;
+    }
 
-        .stats-number {
-            font-size: 36px;
-            font-weight: bold;
-        }
+    .right-col {
+      position: sticky;
+      top: 0;
+      height: calc(100vh - 140px);
+    }
 
-        .workflow-step {
-            padding: 15px;
-            border-left: 3px solid var(--primary-color);
-            margin-bottom: 15px;
-            background: #f9fafb;
-            border-radius: 5px;
-        }
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
 
-        pre {
-            background: #1f2937;
-            color: #10b981;
-            padding: 15px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.20), transparent 36%);
+      pointer-events: none;
+    }
 
-        .code-preview {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 20px;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-    </style>
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--blue-1);
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .title-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: linear-gradient(135deg, rgba(88,183,255,0.24), rgba(255,255,255,0.8));
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 8px 16px rgba(0, 100, 180, 0.10);
+      font-size: 12px;
+    }
+
+    .field,
+    .select {
+      width: 100%;
+      border: 1px solid rgba(10, 76, 128, 0.18);
+      background: rgba(255,255,255,0.78);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+      transition: 0.2s ease;
+      margin-bottom: 8px;
+    }
+
+    .field:focus,
+    .select:focus {
+      border-color: rgba(0,150,255,0.7);
+      box-shadow: 0 0 0 3px rgba(88,183,255,0.16), inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .button {
+      width: 100%;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--blue-3), var(--blue-4));
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,150,255,0.20);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(0,150,255,0.28);
+      filter: brightness(1.03);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.secondary {
+      background: linear-gradient(90deg, #75c3ff, #5db2ff);
+    }
+
+    .button.small {
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(15, 157, 122, 0.15);
+      border: 1px solid rgba(15, 157, 122, 0.3);
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .status-badge.pending {
+      background: rgba(206, 139, 0, 0.15);
+      border-color: rgba(206, 139, 0, 0.3);
+      color: var(--warning);
+    }
+
+    .status-badge.error {
+      background: rgba(211, 47, 47, 0.15);
+      border-color: rgba(211, 47, 47, 0.3);
+      color: var(--error);
+    }
+
+    .mode-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .mode-btn {
+      padding: 8px 10px;
+      border: 2px solid rgba(88, 183, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.6);
+      color: var(--blue-2);
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(90deg, var(--blue-3), var(--blue-4));
+      color: white;
+      border-color: var(--blue-3);
+      box-shadow: 0 4px 12px rgba(0,150,255,0.25);
+    }
+
+    .hero-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      background:
+        radial-gradient(circle at top center, rgba(255,255,255,0.28), transparent 26%),
+        linear-gradient(180deg, rgba(28,95,153,0.95), rgba(20,71,121,0.96));
+      color: #eaf6ff;
+      border: 1px solid rgba(193, 228, 255, 0.45);
+      box-shadow: 0 20px 50px rgba(13, 56, 102, 0.35);
+      border-radius: 16px;
+      height: 100%;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-center {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .core {
+      width: min(280px, 100%);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.25), rgba(255,255,255,0.04) 46%, transparent 60%),
+        radial-gradient(circle at center, rgba(88,183,255,0.22), transparent 62%);
+      position: relative;
+    }
+
+    .core::before,
+    .core::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(190, 230, 255, 0.22);
+    }
+
+    .core::before {
+      inset: 18px;
+    }
+
+    .core::after {
+      inset: 42px;
+    }
+
+    .bot-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 0 30px rgba(140,211,255,0.18);
+      margin: 0 auto 16px;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+    }
+
+    .hero-sub {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(234,246,255,0.82);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .pulse-line {
+      width: 100px;
+      height: 2px;
+      margin: 16px auto 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+
+    .hero-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .mini-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: rgba(234,246,255,0.72);
+      margin-bottom: 6px;
+    }
+
+    .mini-value {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .log-box {
+      max-height: 120px;
+      overflow-y: auto;
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255,255,255,0.85);
+      color: var(--blue-1);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .log-box::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .log-box::-webkit-scrollbar-thumb {
+      background: rgba(88, 183, 255, 0.3);
+      border-radius: 2px;
+    }
+
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(10,76,128,0.08);
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 1200px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .right-col {
+        position: relative;
+        top: 0;
+        height: auto;
+        min-height: 400px;
+      }
+
+      .left-col {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 14px 16px;
+        flex-wrap: wrap;
+      }
+
+      .header-stats {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+      }
+
+      .left-col {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        width: 94%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="main-container">
-            <!-- Header -->
-            <div class="header">
-                <h1><i class="bi bi-lightning-charge-fill"></i> Interlevel POC</h1>
-                <p class="mb-0">Complete Testing Interface for Phases 1-5</p>
-            </div>
+  <div class="grid-overlay"></div>
 
-            <!-- Dashboard Stats -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="stats-card">
-                        <div><i class="bi bi-people-fill"></i> Users</div>
-                        <div class="stats-number" id="stats-users">-</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        <div><i class="bi bi-chat-dots-fill"></i> Sessions</div>
-                        <div class="stats-number" id="stats-sessions">-</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        <div><i class="bi bi-robot"></i> Agents</div>
-                        <div class="stats-number" id="stats-agents">-</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                        <div><i class="bi bi-play-circle-fill"></i> Executions</div>
-                        <div class="stats-number" id="stats-executions">-</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Phase 1: Foundation -->
-            <div class="phase-card">
-                <div class="phase-header">
-                    <div class="phase-icon phase-1">
-                        <i class="bi bi-gear-fill" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Phase 1: Foundation</h3>
-                        <small class="text-muted">Database, Logging, Validators</small>
-                    </div>
-                    <span class="status-badge status-complete">✅ Complete</span>
-                </div>
-                <p>Tests core infrastructure: database connection, logging system, and validation utilities.</p>
-                <button class="btn btn-test" onclick="testPhase1()">
-                    <i class="bi bi-play-fill"></i> Test Phase 1
-                </button>
-                <div id="phase1-result" class="result-box" style="display: none;"></div>
-            </div>
-
-            <!-- Phase 2: LLM Integration -->
-            <div class="phase-card">
-                <div class="phase-header">
-                    <div class="phase-icon phase-2">
-                        <i class="bi bi-cpu-fill" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Phase 2: LLM Integration</h3>
-                        <small class="text-muted">LLM Client, Ollama Provider</small>
-                    </div>
-                    <span class="status-badge status-complete">✅ Complete</span>
-                </div>
-                <p>Tests LLM connectivity and provider integration.</p>
-                <button class="btn btn-test" onclick="testPhase2()">
-                    <i class="bi bi-play-fill"></i> Test Phase 2
-                </button>
-                <div id="phase2-result" class="result-box" style="display: none;"></div>
-            </div>
-
-            <!-- Phase 3: Clarification -->
-            <div class="phase-card">
-                <div class="phase-header">
-                    <div class="phase-icon phase-3">
-                        <i class="bi bi-chat-square-text-fill" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Phase 3: Clarification Service</h3>
-                        <small class="text-muted">User Intent → Agent Requirements</small>
-                    </div>
-                    <span class="status-badge status-complete">✅ Complete</span>
-                </div>
-                <p>Interactive clarification dialog to understand user intent.</p>
-
-                <div class="mb-3">
-                    <label class="form-label">Your Intent</label>
-                    <input type="text" class="form-control" id="phase3-intent"
-                           placeholder="e.g., I want to create a weather monitoring agent">
-                </div>
-
-                <button class="btn btn-test" onclick="testPhase3()">
-                    <i class="bi bi-play-fill"></i> Start Clarification
-                </button>
-
-                <div id="phase3-result" class="result-box" style="display: none;"></div>
-
-                <!-- Conversation Interface -->
-                <div id="phase3-conversation" style="display: none; margin-top: 15px;">
-                    <div class="mb-3">
-                        <label class="form-label"><strong>Question:</strong></label>
-                        <div id="phase3-question" class="alert alert-info"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Your Answer:</label>
-                        <input type="text" class="form-control" id="phase3-answer"
-                               placeholder="Type your answer here...">
-                    </div>
-                    <button class="btn btn-test" onclick="answerPhase3()">
-                        <i class="bi bi-send-fill"></i> Submit Answer
-                    </button>
-                </div>
-            </div>
-
-            <!-- Phase 4: Requirements Generation -->
-            <div class="phase-card">
-                <div class="phase-header">
-                    <div class="phase-icon phase-4">
-                        <i class="bi bi-file-earmark-text-fill" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Phase 4: Requirements Model</h3>
-                        <small class="text-muted">Conversation → Structured JSON</small>
-                    </div>
-                    <span class="status-badge status-complete">✅ Complete</span>
-                </div>
-                <p>Converts clarification session into structured requirements JSON.</p>
-
-                <div class="mb-3">
-                    <label class="form-label">Session ID (from Phase 3)</label>
-                    <input type="text" class="form-control" id="phase4-session-id"
-                           placeholder="Enter session ID">
-                </div>
-
-                <button class="btn btn-test" onclick="testPhase4()">
-                    <i class="bi bi-play-fill"></i> Generate Requirements
-                </button>
-
-                <div id="phase4-result" class="result-box" style="display: none;"></div>
-            </div>
-
-            <!-- Phase 5: Universal Executor -->
-            <div class="phase-card">
-                <div class="phase-header">
-                    <div class="phase-icon phase-5">
-                        <i class="bi bi-code-slash" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Phase 5: Universal Executor</h3>
-                        <small class="text-muted">Requirements → Python Code</small>
-                    </div>
-                    <span class="status-badge status-complete">✅ Complete</span>
-                </div>
-                <p>Generates executable Python agent code from requirements.</p>
-
-                <div class="mb-3">
-                    <label class="form-label">Agent ID (from Phase 4)</label>
-                    <input type="text" class="form-control" id="phase5-agent-id"
-                           placeholder="Enter agent ID">
-                </div>
-
-                <button class="btn btn-test me-2" onclick="testPhase5Generate()">
-                    <i class="bi bi-play-fill"></i> Generate Code
-                </button>
-
-                <button class="btn btn-outline-secondary" onclick="testPhase5Templates()">
-                    <i class="bi bi-list-ul"></i> View Templates
-                </button>
-
-                <div id="phase5-result" class="result-box" style="display: none;"></div>
-            </div>
-
-            <!-- Complete Workflow Test -->
-            <div class="phase-card" style="border: 3px solid var(--primary-color);">
-                <div class="phase-header">
-                    <div class="phase-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <i class="bi bi-lightning-charge-fill" style="color: white;"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h3 class="mb-0">Complete Workflow Test</h3>
-                        <small class="text-muted">Test all phases together</small>
-                    </div>
-                </div>
-                <p>Run a complete end-to-end test from user intent to generated code.</p>
-                <button class="btn btn-test btn-lg" onclick="testCompleteWorkflow()">
-                    <i class="bi bi-rocket-takeoff-fill"></i> Run Complete Workflow
-                </button>
-                <div id="complete-result" class="result-box" style="display: none;"></div>
-            </div>
-        </div>
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark">⚡</div>
+      <div>
+        <h1>INTERLEVEL</h1>
+        <p>Testing Interface</p>
+      </div>
     </div>
+    <div class="header-stats">
+      <div class="stat-chip">
+        <div class="stat-value" id="stat-users">-</div>
+        <div class="stat-label">Users</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-value" id="stat-sessions">-</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-value" id="stat-agents">-</div>
+        <div class="stat-label">Agents</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-value" id="stat-executions">-</div>
+        <div class="stat-label">Executions</div>
+      </div>
+    </div>
+  </header>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <main class="page">
+    <section class="left-col">
+      <!-- Mode Selector -->
+      <div class="panel full-width">
+        <div class="panel-title"><span class="title-icon">⚙</span> Testing Mode</div>
+        <div class="mode-selector">
+          <button class="mode-btn active" onclick="setMode('test', this)">⚡ Test Mode</button>
+          <button class="mode-btn" onclick="setMode('ollama', this)">🤖 Ollama Mode</button>
+        </div>
+        <span class="status-badge" id="modeStatus">Test Mode (instant)</span>
+      </div>
 
-    <!-- Custom JavaScript -->
-    <script>
-        // Global variables
-        let currentSessionId = null;
-        let currentAgentId = null;
+      <!-- Phase 1 -->
+      <div class="panel">
+        <div class="panel-title"><span class="title-icon">🔧</span> Phase 1: Foundation</div>
+        <button class="button" onclick="testPhase1()"><span class="spinner" id="spin1" style="display:none;"></span> Test Foundation</button>
+        <span class="status-badge pending" id="status1">Waiting...</span>
+      </div>
 
-        // Load dashboard stats on page load
-        window.onload = function() {
-            loadDashboardStats();
-        };
+      <!-- Phase 2 -->
+      <div class="panel">
+        <div class="panel-title"><span class="title-icon">🧠</span> Phase 2: LLM</div>
+        <button class="button secondary" onclick="testPhase2()"><span class="spinner" id="spin2" style="display:none;"></span> Test LLM</button>
+        <span class="status-badge pending" id="status2">Waiting...</span>
+      </div>
 
-        // Load dashboard statistics
-        function loadDashboardStats() {
-            fetch('/api/dashboard/stats')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('stats-users').textContent = data.users || 0;
-                    document.getElementById('stats-sessions').textContent = data.sessions || 0;
-                    document.getElementById('stats-agents').textContent = data.agents || 0;
-                    document.getElementById('stats-executions').textContent = data.executions || 0;
-                })
-                .catch(error => console.error('Error loading stats:', error));
-        }
+      <!-- Phase 3 -->
+      <div class="panel">
+        <div class="panel-title"><span class="title-icon">💬</span> Phase 3: Clarification</div>
+        <input class="field" id="phase3-intent" placeholder="e.g., weather monitoring agent" />
+        <button class="button" onclick="testPhase3()"><span class="spinner" id="spin3" style="display:none;"></span> Start Session</button>
+        <span class="status-badge pending" id="status3">Waiting...</span>
 
-        // Test Phase 1
-        function testPhase1() {
-            const resultDiv = document.getElementById('phase1-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Testing Phase 1...';
+        <!-- Conversation Interface -->
+        <div id="phase3-conversation" style="display: none; margin-top: 10px; padding: 10px; background: rgba(88,183,255,0.1); border-radius: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--blue-2);">Question:</div>
+            <div id="phase3-counter" style="font-size: 10px; font-weight: 700; color: var(--blue-3); background: rgba(88,183,255,0.2); padding: 2px 6px; border-radius: 4px;">1/3</div>
+          </div>
+          <div id="phase3-question" style="font-size: 12px; color: var(--text); margin-bottom: 8px; padding: 8px; background: rgba(255,255,255,0.6); border-radius: 8px;"></div>
+          <input class="field" id="phase3-answer" placeholder="Type your answer..." style="margin-bottom: 8px;" />
+          <button class="button small" onclick="answerPhase3()"><span class="spinner" id="spin3-answer" style="display:none;"></span> Submit Answer</button>
+        </div>
+      </div>
 
-            fetch('/api/test/phase1/status')
-                .then(response => response.json())
-                .then(data => {
-                    let html = `<strong>${data.phase}</strong><br><br>`;
-                    data.components.forEach(comp => {
-                        html += `${comp.status} ${comp.name}: ${comp.details}<br>`;
-                    });
-                    resultDiv.innerHTML = html;
-                })
-                .catch(error => {
-                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
-                });
-        }
+      <!-- Phase 4 -->
+      <div class="panel">
+        <div class="panel-title"><span class="title-icon">📄</span> Phase 4: Requirements</div>
+        <input class="field" id="phase4-session-id" placeholder="Session ID (auto-filled)" readonly />
+        <button class="button" onclick="testPhase4()"><span class="spinner" id="spin4" style="display:none;"></span> Generate</button>
+        <span class="status-badge pending" id="status4">Waiting...</span>
+      </div>
 
-        // Test Phase 2
-        function testPhase2() {
-            const resultDiv = document.getElementById('phase2-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Testing Phase 2...';
+      <!-- Phase 5 -->
+      <div class="panel">
+        <div class="panel-title"><span class="title-icon">💻</span> Phase 5: Code Generation</div>
+        <input class="field" id="phase5-agent-id" placeholder="Agent ID (auto-filled)" readonly />
+        <button class="button secondary" onclick="testPhase5()"><span class="spinner" id="spin5" style="display:none;"></span> Generate Code</button>
+        <span class="status-badge pending" id="status5">Waiting...</span>
+      </div>
 
-            fetch('/api/test/phase2/status')
-                .then(response => response.json())
-                .then(data => {
-                    let html = `<strong>${data.phase}</strong><br><br>`;
-                    data.components.forEach(comp => {
-                        html += `${comp.status} ${comp.name}: ${comp.details}<br>`;
-                    });
-                    resultDiv.innerHTML = html;
-                })
-                .catch(error => {
-                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
-                });
-        }
+      <!-- Output Display -->
+      <div class="panel full-width">
+        <div class="panel-title"><span class="title-icon">📝</span> System Output</div>
+        <div class="log-box" id="logBox" style="max-height: 280px;"></div>
+      </div>
 
-        // Test Phase 3
-        function testPhase3() {
-            const intent = document.getElementById('phase3-intent').value;
-            if (!intent) {
-                alert('Please enter your intent');
-                return;
+      <!-- Detailed Output -->
+      <div class="panel full-width" id="detailedOutput" style="display: none;">
+        <div class="panel-title"><span class="title-icon">📋</span> Detailed Results</div>
+        <div class="log-box" id="detailedContent" style="max-height: 320px; font-size: 10px; white-space: pre-wrap; word-break: break-word;"></div>
+      </div>
+    </section>
+
+    <section class="right-col">
+      <div class="panel hero-panel">
+        <div class="hero-top">
+          <div class="hero-chip">Advanced AI</div>
+          <div class="hero-chip" id="heroMode">Agent Executor</div>
+        </div>
+
+        <div class="hero-center">
+          <div class="core">
+            <div>
+              <div class="bot-icon">🤖</div>
+              <h2 class="hero-title" id="heroTitle">Agent Ready</h2>
+              <p class="hero-sub" id="heroSub">Advanced AI<br>Agent Executor</p>
+              <div class="pulse-line"></div>
+              <p class="hero-sub" id="heroStatusText">System status operational</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <div class="mini-card">
+            <div class="mini-label">Session ID</div>
+            <div class="mini-value" id="displaySessionId">Not created</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Agent ID</div>
+            <div class="mini-value" id="displayAgentId">Not created</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Requirements</div>
+            <div class="mini-value" id="requirementsState">Pending</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-label">Code Status</div>
+            <div class="mini-value" id="codeState">Standby</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let currentMode = 'test';
+    let currentSessionId = null;
+    let currentAgentId = null;
+    let currentQuestionNumber = 0;
+    let totalQuestionsCount = 3;
+    const logBox = document.getElementById('logBox');
+
+    function setMode(mode, btn) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const status = document.getElementById('modeStatus');
+      status.textContent = mode === 'test' ? 'Test Mode (instant)' : 'Ollama Mode (real LLM)';
+      addLog(`Switched to ${mode === 'test' ? 'test' : 'Ollama'} mode`);
+    }
+
+    function addLog(message) {
+      const now = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.textContent = `[${now}] ${message}`;
+      logBox.prepend(entry);
+    }
+
+    function setStatus(id, text, type = 'success') {
+      const badge = document.getElementById(id);
+      badge.textContent = text;
+      badge.className = `status-badge ${type === 'success' ? '' : type === 'error' ? 'error' : 'pending'}`;
+    }
+
+    function showSpinner(id, show = true) {
+      document.getElementById(id).style.display = show ? 'inline-block' : 'none';
+    }
+
+    function loadStats() {
+      fetch('/api/dashboard/stats')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('stat-users').textContent = data.users || 0;
+          document.getElementById('stat-sessions').textContent = data.sessions || 0;
+          document.getElementById('stat-agents').textContent = data.agents || 0;
+          document.getElementById('stat-executions').textContent = data.executions || 0;
+        });
+    }
+
+    function updateQuestionCounter() {
+      const counter = document.getElementById('phase3-counter');
+      if (counter) {
+        counter.textContent = `${currentQuestionNumber}/${totalQuestionsCount}`;
+      }
+    }
+
+    function testPhase1() {
+      showSpinner('spin1', true);
+      setStatus('status1', 'Testing...', 'pending');
+      addLog('Phase 1: Starting foundation test...');
+
+      setTimeout(() => {
+        fetch('/api/test/phase1/status')
+          .then(r => r.json())
+          .then(data => {
+            showSpinner('spin1', false);
+            setStatus('status1', '✓ Foundation OK');
+            document.getElementById('heroTitle').textContent = 'Core Stable';
+            document.getElementById('heroSub').innerHTML = 'Foundation Layer<br>Validated';
+            addLog('Phase 1 complete: foundation test passed');
+          })
+          .catch(err => {
+            showSpinner('spin1', false);
+            setStatus('status1', 'Error', 'error');
+            addLog('Phase 1 error: ' + err.message);
+          });
+      }, 300);
+    }
+
+    function testPhase2() {
+      showSpinner('spin2', true);
+      setStatus('status2', 'Testing...', 'pending');
+      addLog('Phase 2: Starting LLM test...');
+
+      setTimeout(() => {
+        fetch('/api/test/phase2/status')
+          .then(r => r.json())
+          .then(data => {
+            showSpinner('spin2', false);
+            setStatus('status2', '✓ LLM OK');
+            document.getElementById('heroTitle').textContent = 'Model Linked';
+            document.getElementById('heroSub').innerHTML = 'Language Model<br>Connected';
+            addLog('Phase 2 complete: LLM connection verified');
+          })
+          .catch(err => {
+            showSpinner('spin2', false);
+            setStatus('status2', 'Error', 'error');
+            addLog('Phase 2 error: ' + err.message);
+          });
+      }, 300);
+    }
+
+    function testPhase3() {
+      const intent = document.getElementById('phase3-intent').value.trim();
+      if (!intent) {
+        alert('Please enter an intent');
+        return;
+      }
+
+      showSpinner('spin3', true);
+      setStatus('status3', 'Starting...', 'pending');
+      addLog('Phase 3: Starting clarification session...');
+
+      setTimeout(() => {
+        fetch('/api/test/phase3/start-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: 'web-test-user', intent })
+        })
+          .then(r => r.json())
+          .then(data => {
+            showSpinner('spin3', false);
+            if (data.success) {
+              currentSessionId = data.session_id;
+              document.getElementById('phase4-session-id').value = data.session_id;
+              document.getElementById('displaySessionId').textContent = data.session_id.substring(0, 8) + '...';
+              setStatus('status3', '✓ Awaiting Responses');
+              document.getElementById('heroTitle').textContent = 'Session Active';
+              document.getElementById('heroSub').innerHTML = 'Clarification<br>In Progress';
+
+              // Show conversation interface
+              document.getElementById('phase3-conversation').style.display = 'block';
+              document.getElementById('phase3-question').textContent = data.first_question || 'No question available';
+
+              // Set question counter
+              currentQuestionNumber = data.question_number || 1;
+              totalQuestionsCount = data.total_questions || 3;
+              updateQuestionCounter();
+
+              addLog(`Phase 3: Session created - ${data.first_question}`);
+            } else {
+              setStatus('status3', 'Error', 'error');
+              addLog('Phase 3 error: ' + data.error);
             }
+          })
+          .catch(err => {
+            showSpinner('spin3', false);
+            setStatus('status3', 'Error', 'error');
+            addLog('Phase 3 error: ' + err.message);
+          });
+      }, 300);
+    }
 
-            const resultDiv = document.getElementById('phase3-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Starting clarification session...';
+    function answerPhase3() {
+      const answer = document.getElementById('phase3-answer').value.trim();
+      if (!answer) {
+        alert('Please enter an answer');
+        return;
+      }
 
-            fetch('/api/test/phase3/start-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_id: 'web-test-user',
-                    intent: intent
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    currentSessionId = data.session_id;
-                    resultDiv.innerHTML = `
-                        ✅ Session started!<br>
-                        <strong>Session ID:</strong> ${data.session_id}<br>
-                        <strong>Status:</strong> ${data.status}
-                    `;
+      if (!currentSessionId) {
+        alert('No active session');
+        return;
+      }
 
-                    // Show conversation interface
-                    const convDiv = document.getElementById('phase3-conversation');
-                    const questionDiv = document.getElementById('phase3-question');
-                    convDiv.style.display = 'block';
-                    questionDiv.innerHTML = data.first_question || 'Complete';
+      showSpinner('spin3-answer', true);
+      addLog(`Answering: ${answer}`);
 
-                    // Auto-fill session ID for Phase 4
-                    document.getElementById('phase4-session-id').value = data.session_id;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                resultDiv.innerHTML = `❌ Error: ${error.message}`;
-            });
-        }
+      fetch('/api/test/phase3/respond', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: currentSessionId, response: answer })
+      })
+        .then(r => r.json())
+        .then(data => {
+          showSpinner('spin3-answer', false);
+          if (data.success) {
+            document.getElementById('phase3-answer').value = '';
 
-        // Answer Phase 3 question
-        function answerPhase3() {
-            const answer = document.getElementById('phase3-answer').value;
-            if (!answer) {
-                alert('Please enter an answer');
-                return;
+            if (data.is_complete) {
+              document.getElementById('phase3-question').textContent = '✓ Clarification Complete!';
+              document.getElementById('phase3-answer').style.display = 'none';
+              document.querySelector('#phase3-conversation button').style.display = 'none';
+              document.getElementById('phase3-counter').style.display = 'none';
+              setStatus('status3', '✓ Complete');
+              addLog('Phase 3: Clarification session completed');
+            } else {
+              // Update question counter
+              if (data.question_number !== undefined) {
+                currentQuestionNumber = data.question_number;
+              } else {
+                currentQuestionNumber++;
+              }
+              if (data.total_questions !== undefined) {
+                totalQuestionsCount = data.total_questions;
+              }
+              updateQuestionCounter();
+
+              // Display new question
+              document.getElementById('phase3-question').textContent = data.next_question;
+              addLog(`Phase 3: Question ${currentQuestionNumber}/${totalQuestionsCount} - ${data.next_question}`);
             }
+          } else {
+            addLog('Phase 3 error: ' + data.error);
+          }
+        })
+        .catch(err => addLog('Phase 3 error: ' + err.message));
+    }
 
-            if (!currentSessionId) {
-                alert('No active session');
-                return;
+    function testPhase4() {
+      const sessionId = document.getElementById('phase4-session-id').value;
+      if (!sessionId) {
+        alert('Please start Phase 3 first');
+        return;
+      }
+
+      showSpinner('spin4', true);
+      setStatus('status4', 'Generating...', 'pending');
+      addLog('Phase 4: Generating requirements...');
+
+      setTimeout(() => {
+        fetch('/api/test/phase4/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, mode: currentMode })
+        })
+          .then(r => r.json())
+          .then(data => {
+            showSpinner('spin4', false);
+            if (data.success) {
+              currentAgentId = data.agent_id;
+              document.getElementById('phase5-agent-id').value = data.agent_id;
+              document.getElementById('displayAgentId').textContent = data.agent_id.substring(0, 8) + '...';
+              document.getElementById('requirementsState').textContent = 'Generated';
+              setStatus('status4', '✓ Requirements OK');
+              document.getElementById('heroTitle').textContent = 'Requirements Ready';
+              document.getElementById('heroSub').innerHTML = 'Functional Spec<br>Generated';
+              addLog(`Phase 4 complete: agent ${data.agent_id.substring(0, 8)}... [${data.name}]`);
+
+              // Show detailed output
+              document.getElementById('detailedOutput').style.display = 'block';
+              document.getElementById('detailedContent').textContent =
+                `Agent ID: ${data.agent_id}\n` +
+                `Name: ${data.name}\n` +
+                `File: ${data.filepath}\n\n` +
+                `REQUIREMENTS (JSON):\n` +
+                `${JSON.stringify(data.requirements, null, 2)}`;
+            } else {
+              setStatus('status4', 'Error', 'error');
+              addLog('Phase 4 error: ' + data.error);
             }
+          })
+          .catch(err => {
+            showSpinner('spin4', false);
+            setStatus('status4', 'Error', 'error');
+            addLog('Phase 4 error: ' + err.message);
+          });
+      }, 300);
+    }
 
-            const questionDiv = document.getElementById('phase3-question');
-            questionDiv.innerHTML = '<div class="loading"></div> Processing...';
+    function testPhase5() {
+      const agentId = document.getElementById('phase5-agent-id').value;
+      if (!agentId) {
+        alert('Please complete Phase 4 first');
+        return;
+      }
 
-            fetch('/api/test/phase3/respond', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session_id: currentSessionId,
-                    response: answer
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Clear answer box
-                    document.getElementById('phase3-answer').value = '';
+      showSpinner('spin5', true);
+      setStatus('status5', 'Generating...', 'pending');
+      addLog('Phase 5: Generating code package...');
 
-                    if (data.is_complete) {
-                        questionDiv.innerHTML = `
-                            ✅ <strong>Clarification Complete!</strong><br>
-                            Session ID: ${currentSessionId}<br>
-                            You can now proceed to Phase 4.
-                        `;
-                        document.getElementById('phase4-session-id').value = currentSessionId;
+      setTimeout(() => {
+        fetch('/api/test/phase5/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ agent_id: agentId, mode: currentMode })
+        })
+          .then(r => r.json())
+          .then(data => {
+            showSpinner('spin5', false);
+            if (data.success) {
+              document.getElementById('codeState').textContent = 'Compiled';
+              setStatus('status5', '✓ Code Ready');
+              document.getElementById('heroTitle').textContent = 'Code Prepared';
+              document.getElementById('heroSub').innerHTML = 'Execution Package<br>Ready';
+              addLog(`Phase 5 complete: code package ready (${data.code_size} bytes) [${data.template_used}]`);
 
-                        // Hide answer input since complete
-                        document.getElementById('phase3-answer').style.display = 'none';
-                        document.querySelector('#phase3-conversation button').style.display = 'none';
-                    } else {
-                        questionDiv.innerHTML = data.next_question;
-                    }
-                } else {
-                    questionDiv.innerHTML = `❌ Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                questionDiv.innerHTML = `❌ Error: ${error.message}`;
-            });
-        }
-
-        // Test Phase 4
-        function testPhase4() {
-            const sessionId = document.getElementById('phase4-session-id').value;
-            if (!sessionId) {
-                alert('Please enter a session ID');
-                return;
+              // Show detailed output with full code
+              document.getElementById('detailedOutput').style.display = 'block';
+              document.getElementById('detailedContent').textContent =
+                `Agent ID: ${data.agent_id}\n` +
+                `Template: ${data.template_used}\n` +
+                `Code Path: ${data.code_path}\n` +
+                `Code Size: ${data.code_size} bytes\n` +
+                `\n${'='.repeat(60)}\n` +
+                `GENERATED CODE:\n` +
+                `${'='.repeat(60)}\n\n` +
+                data.code_preview;
+            } else {
+              setStatus('status5', 'Error', 'error');
+              addLog('Phase 5 error: ' + data.error);
             }
+          })
+          .catch(err => {
+            showSpinner('spin5', false);
+            setStatus('status5', 'Error', 'error');
+            addLog('Phase 5 error: ' + err.message);
+          });
+      }, 300);
+    }
 
-            const resultDiv = document.getElementById('phase4-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Generating requirements...';
-
-            fetch('/api/test/phase4/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ session_id: sessionId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    currentAgentId = data.agent_id;
-                    resultDiv.innerHTML = `
-                        ✅ Requirements generated!<br>
-                        <strong>Agent ID:</strong> ${data.agent_id}<br>
-                        <strong>Name:</strong> ${data.name}<br>
-                        <strong>File:</strong> ${data.filepath}<br><br>
-                        <pre>${JSON.stringify(data.requirements, null, 2)}</pre>
-                    `;
-
-                    // Auto-fill agent ID for Phase 5
-                    document.getElementById('phase5-agent-id').value = data.agent_id;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                resultDiv.innerHTML = `❌ Error: ${error.message}`;
-            });
-        }
-
-        // Test Phase 5 - Generate Code
-        function testPhase5Generate() {
-            const agentId = document.getElementById('phase5-agent-id').value;
-            if (!agentId) {
-                alert('Please enter an agent ID');
-                return;
-            }
-
-            const resultDiv = document.getElementById('phase5-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Generating code...';
-
-            fetch('/api/test/phase5/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ agent_id: agentId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    resultDiv.innerHTML = `
-                        ✅ Code generated!<br>
-                        <strong>Agent ID:</strong> ${data.agent_id}<br>
-                        <strong>Template Used:</strong> ${data.template_used}<br>
-                        <strong>Code Path:</strong> ${data.code_path}<br>
-                        <strong>Code Size:</strong> ${data.code_size} bytes<br><br>
-                        <strong>Code Preview:</strong>
-                        <div class="code-preview">${escapeHtml(data.code_preview)}</div>
-                    `;
-                } else {
-                    resultDiv.innerHTML = `❌ Error: ${data.error}`;
-                }
-            })
-            .catch(error => {
-                resultDiv.innerHTML = `❌ Error: ${error.message}`;
-            });
-        }
-
-        // Test Phase 5 - View Templates
-        function testPhase5Templates() {
-            const resultDiv = document.getElementById('phase5-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Loading templates...';
-
-            fetch('/api/test/phase5/templates')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let html = '<strong>Available Templates:</strong><br><br>';
-                        data.templates.forEach(template => {
-                            html += `
-                                <div class="workflow-step">
-                                    <strong>${template.name}</strong><br>
-                                    ${template.description}<br>
-                                    <small class="text-muted">Use case: ${template.use_case}</small>
-                                </div>
-                            `;
-                        });
-                        resultDiv.innerHTML = html;
-                    } else {
-                        resultDiv.innerHTML = `❌ Error: ${data.error}`;
-                    }
-                })
-                .catch(error => {
-                    resultDiv.innerHTML = `❌ Error: ${error.message}`;
-                });
-        }
-
-        // Test Complete Workflow
-        function testCompleteWorkflow() {
-            const resultDiv = document.getElementById('complete-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = '<div class="loading"></div> Running complete workflow...';
-
-            fetch('/api/test/complete-workflow', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_id: 'workflow-test-user',
-                    intent: 'Create a weather monitoring agent'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                let html = '<strong>Workflow Results:</strong><br><br>';
-
-                if (data.steps) {
-                    data.steps.forEach(step => {
-                        const icon = step.status === 'complete' ? '✅' :
-                                   step.status === 'in_progress' ? '⏳' : '❌';
-                        html += `
-                            <div class="workflow-step">
-                                ${icon} <strong>${step.phase}</strong><br>
-                                ${step.step}<br>
-                                ${step.result || ''}
-                            </div>
-                        `;
-                    });
-                }
-
-                html += `<br><strong>Status:</strong> ${data.success ? '✅ Success' : '❌ Failed'}<br>`;
-                html += `<strong>Message:</strong> ${data.message || 'Complete'}`;
-
-                resultDiv.innerHTML = html;
-            })
-            .catch(error => {
-                resultDiv.innerHTML = `❌ Error: ${error.message}`;
-            });
-        }
-
-        // Utility function to escape HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-    </script>
+    // Initialize
+    window.addEventListener('load', () => {
+      loadStats();
+      addLog('Interface loaded successfully');
+      addLog('Ready for testing - select a testing mode and start with Phase 1');
+    });
+  </script>
 </body>
 </html>

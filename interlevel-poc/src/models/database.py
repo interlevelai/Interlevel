@@ -146,7 +146,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def init_db():
     """Initialize database - create all tables"""
     Base.metadata.create_all(bind=engine)
-    print("✅ Database initialized")
+    print("[OK] Database initialized")
 
 
 def get_db():
