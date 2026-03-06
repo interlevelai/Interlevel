@@ -28,22 +28,26 @@ class LLMClient:
         """Initialize the appropriate provider client"""
         logger.info(f"Initializing LLM provider: {self.provider}")
 
-        if self.provider == "ollama":
-            from src.llm.providers.ollama import OllamaProvider
+        try:
+            if self.provider == "ollama":
+                from src.llm.providers.ollama import OllamaProvider
 
-            self._client = OllamaProvider()
-        elif self.provider == "openai":
-            from src.llm.providers.openai import OpenAIProvider
+                self._client = OllamaProvider()
+            elif self.provider == "openai":
+                from src.llm.providers.openai import OpenAIProvider
 
-            self._client = OpenAIProvider()
-        elif self.provider == "anthropic":
-            from src.llm.providers.anthropic import AnthropicProvider
+                self._client = OpenAIProvider()
+            elif self.provider == "anthropic":
+                from src.llm.providers.anthropic import AnthropicProvider
 
-            self._client = AnthropicProvider()
-        else:
-            raise ValueError(f"Unknown LLM provider: {self.provider}")
+                self._client = AnthropicProvider()
+            else:
+                raise ValueError(f"Unknown LLM provider: {self.provider}")
 
-        logger.info(f"LLM provider initialized: {self.provider}")
+            logger.info(f"LLM provider initialized: {self.provider}")
+        except ConnectionError as e:
+            logger.warning(f"Could not connect to {self.provider}: {e}. Deferred initialization.")
+            self._client = None
 
     def generate(
         self, prompt: str, max_tokens: int = 1000, temperature: float = 0.7

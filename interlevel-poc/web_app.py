@@ -32,7 +32,7 @@ logger = get_logger(__name__)
 # Initialize database tables
 print("Initializing database...")
 init_db()
-print("✅ Database ready!")
+print("[OK] Database ready!")
 
 # Initialize Flask app
 app = Flask(__name__,
@@ -652,11 +652,11 @@ if __name__ == '__main__':
     print("=" * 80)
     print("  INTERLEVEL POC - WEB TESTING INTERFACE")
     print("=" * 80)
-    print("\n🚀 Starting web server...")
-    print(f"📍 URL: http://localhost:5001")
-    print(f"📊 Dashboard: http://localhost:5001")
-    print(f"🧪 API Docs: http://localhost:5001/api/test")
-    print("\n✨ Available Test Endpoints:")
+    print("\n[START] Starting web server...")
+    print(f"[URL] http://localhost:5001")
+    print(f"[DASHBOARD] http://localhost:5001")
+    print(f"[API] http://localhost:5001/api/test")
+    print("\n[ENDPOINTS] Available Test Endpoints:")
     print("   - Phase 1: /api/test/phase1/status")
     print("   - Phase 2: /api/test/phase2/status")
     print("   - Phase 3: /api/test/phase3/*")

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(SESSION=\"87771f5c-1e0d-4bce-a862-d32b3af20252\")",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(__NEW_LINE_163625de4160cfbf__ SESSION=\"87771f5c-1e0d-4bce-a862-d32b3af20252\")"
+    ]
+  }
+}
